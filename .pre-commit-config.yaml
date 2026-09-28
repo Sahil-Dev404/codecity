@@ -1,0 +1,36 @@
+# ─────────────────────────────────────────────────────────────
+# Runs automatically on `git commit` once you run: pre-commit install
+# Run manually on everything:                      pre-commit run --all-files
+# Update hook versions:                            pre-commit autoupdate
+# ─────────────────────────────────────────────────────────────
+
+# Skip generated files and tiny sample repos (their content must stay untouched)
+exclude: ^(data/samples/|frontend/package-lock\.json|.*\.min\.js)
+
+repos:
+  # ── General hygiene + safety ───────────────────────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ["--maxkb=1000"]
+      - id: detect-private-key
+
+  # ── Python: lint (with autofix) ────────────────────────────
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.0
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+
+  # ── Python: format ─────────────────────────────────────────
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
