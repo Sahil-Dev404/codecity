@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html,
+  body {
+    @apply bg-background text-foreground;
+    min-height: 100vh;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  ::selection {
+    @apply bg-accent/30 text-accent-foreground;
+  }
+
+  /* Thin, dark-theme-appropriate scrollbars — default browser scrollbars
+     look jarring against a near-black UI. */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-surface;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-lg;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-foreground-subtle;
+  }
+}
+
+@layer utilities {
+  /* Utility for panels floating over the 3D canvas (FileDrawer, RiskList) */
+  .glass-panel {
+    @apply bg-surface-raised/90 backdrop-blur-md border border-border shadow-panel;
+  }
+}
