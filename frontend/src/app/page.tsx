@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowRight, Github, Sparkles } from "lucide-react";
 
@@ -11,13 +12,20 @@ const DEMO_REPOS = [
 ];
 
 export default function LandingPage() {
+  const router = useRouter();
   const [repoUrl, setRepoUrl] = useState("");
 
   function handleAnalyze(e: React.FormEvent) {
     e.preventDefault();
-    // Wired up to the real /analyze endpoint once the backend exists
-    // (Phase 5). For now this is a no-op so the UI is reviewable on its own.
-    console.log("analyze:", repoUrl);
+    // Still a placeholder slug — once the real backend's POST /analyze
+    // exists (Phase 5), this becomes: await submit, get a job id, redirect
+    // to /repo/{job_id} once it completes. For now, go straight to the
+    // mock city so the full page is reachable and demoable end to end.
+    router.push("/repo/demo");
+  }
+
+  function handleDemoClick(repoName: string) {
+    router.push(`/repo/${repoName.replace("/", "__")}`);
   }
 
   return (
@@ -96,6 +104,7 @@ export default function LandingPage() {
           {DEMO_REPOS.map((repo) => (
             <button
               key={repo.name}
+              onClick={() => handleDemoClick(repo.name)}
               className="glass-panel rounded-lg p-4 text-left hover:border-accent/50 transition-colors group"
             >
               <div className="font-mono text-sm text-foreground group-hover:text-accent transition-colors">

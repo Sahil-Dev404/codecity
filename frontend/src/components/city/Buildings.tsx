@@ -1,8 +1,10 @@
 /**
  * Renders every CityNode as a building, positioned by the real squarified
- * treemap from useCityLayout (layout.worker.ts) instead of the placeholder
- * grid this file started with. Still one InstancedMesh for the whole city —
- * only WHERE each instance sits has changed, not HOW it's drawn.
+ * treemap from useCityLayout. Height additionally scales by
+ * timelapseProgress (from TimeLapse.tsx's slider) — buildings grow from
+ * zero to full height as the slider advances, approximating repo history
+ * growth (see TimeLapse.tsx's docstring for the mock-mode limitation this
+ * approximates around).
  */
 
 "use client";
@@ -42,17 +44,13 @@ export function Buildings() {
   const hoveredNodeId = useCityStore((s) => s.hoveredNodeId);
   const selectNode = useCityStore((s) => s.selectNode);
   const hoverNode = useCityStore((s) => s.hoverNode);
+  const timelapseProgress = useCityStore((s) => s.timelapseProgress);
 
-  const { nodePositions, isComputing } = useCityLayout();
+  const { nodePositions } = useCityLayout();
 
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const [pulsePhase, setPulsePhase] = useState(0);
 
-  // Combine CityNode data with the worker's computed positions. Nodes the
-  // worker hasn't placed yet (still computing, or a race on first load)
-  // are filtered out rather than rendered at a fallback (0,0) — a pile of
-  // boxes at the origin looks like a bug, an empty scene for a moment
-  // doesn't.
   const laidOut = useMemo<LaidOutNode[]>(() => {
     if (!city) return [];
     const result: LaidOutNode[] = [];
@@ -82,23 +80,25 @@ export function Buildings() {
     return colors;
   }, [laidOut, selectedNodeId, hoveredNodeId]);
 
-  // Transforms now use each node's real treemap width/depth, not a fixed
-  // footprint — a file with more lines of code visibly occupies more
-  // ground, matching the original "Footprint: Lines of code" plan.
+  // Now re-runs when timelapseProgress changes, not just on layout/
+  // complexity changes — the growth effect needs transforms recomputed
+  // every time the slider moves, same reasoning as layout changes needing
+  // a recompute, just a different trigger.
   useMemo(() => {
     const mesh = meshRef.current;
     if (!mesh) return;
     const dummy = new THREE.Object3D();
 
     laidOut.forEach((node, i) => {
-      const height = heightFromComplexity(node.complexity, maxComplexity);
+      const fullHeight = heightFromComplexity(node.complexity, maxComplexity);
+      const height = Math.max(0.02, fullHeight * timelapseProgress);
       dummy.position.set(node.x, height / 2, node.z);
       dummy.scale.set(node.width, height, node.depth);
       dummy.updateMatrix();
       mesh.setMatrixAt(i, dummy.matrix);
     });
     mesh.instanceMatrix.needsUpdate = true;
-  }, [laidOut, maxComplexity]);
+  }, [laidOut, maxComplexity, timelapseProgress]);
 
   useFrame((_, delta) => {
     setPulsePhase((p) => p + delta);
@@ -151,9 +151,6 @@ export function Buildings() {
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
     >
-      {/* Base geometry is a unit cube (1x1x1) — per-instance scale now
-          does ALL the sizing work: width/depth from the treemap footprint,
-          height from complexity. No separate boxGeometry args needed. */}
       <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial vertexColors roughness={0.55} metalness={0.15} />
       <instancedBufferAttribute attach="instanceColor" args={[colorArray, 3]} />
