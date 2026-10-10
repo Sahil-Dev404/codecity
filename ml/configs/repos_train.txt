@@ -1,0 +1,42 @@
+# One repo URL per line. Blank lines and # comments are ignored.
+# Mid-sized, active, Python / JS / TS. Avoid giants (django, linux, react):
+# they blow the clone timeout and the size limit in .env.
+
+# ── Python ──
+https://github.com/pallets/flask
+https://github.com/pallets/click
+https://github.com/pallets/jinja
+https://github.com/pallets/werkzeug
+https://github.com/pallets/itsdangerous
+https://github.com/psf/requests
+https://github.com/psf/black
+https://github.com/encode/httpx
+https://github.com/encode/starlette
+https://github.com/encode/uvicorn
+https://github.com/tiangolo/fastapi
+https://github.com/Textualize/rich
+https://github.com/Textualize/textual
+https://github.com/pytest-dev/pytest
+https://github.com/marshmallow-code/marshmallow
+https://github.com/tornadoweb/tornado
+https://github.com/aio-libs/aiohttp
+https://github.com/scrapy/scrapy
+https://github.com/celery/celery
+https://github.com/pydantic/pydantic
+https://github.com/benoitc/gunicorn
+https://github.com/python-attrs/attrs
+https://github.com/urllib3/urllib3
+
+# ── JavaScript / TypeScript ──
+https://github.com/expressjs/express
+https://github.com/axios/axios
+https://github.com/fastify/fastify
+https://github.com/koajs/koa
+https://github.com/socketio/socket.io
+https://github.com/chalk/chalk
+https://github.com/sindresorhus/got
+https://github.com/mochajs/mocha
+https://github.com/winstonjs/winston
+https://github.com/typicode/json-server
+https://github.com/TypeStrong/ts-node
+https://github.com/moment/moment

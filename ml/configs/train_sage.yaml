@@ -1,0 +1,15 @@
+# Keys must match fields of TrainConfig in training/train.py.
+# split_mode: auto | cross_project | temporal  (auto picks by repo count)
+model_name: sage
+split_mode: auto
+hidden_dim: 64
+num_layers: 2
+dropout: 0.3
+lr: 0.005
+weight_decay: 0.0001
+max_epochs: 100
+patience: 15
+test_fraction: 0.2
+val_fraction: 0.2
+purge_days: 180
+seed: 42

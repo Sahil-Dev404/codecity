@@ -21,11 +21,10 @@ dependencies = [
     # Job queue / cache
     "redis>=5.0",
     "arq>=0.26",
-    # Inference
-    "onnxruntime>=1.18",
-    "numpy>=1.26",
-    # Git access (reuses the same mining/parsing/graph code)
-    "codecity-ml",
+    # Mining, parsing, graph building and CPU inference all come from the
+    # ml package. Its [gnn] extra supplies torch + torch-geometric. Install
+    # torch from the CPU wheel index first (see Phase 4, File 43).
+    "codecity-ml[gnn]",
     # Security / utils
     "httpx>=0.27",
     "python-multipart>=0.0.9",
